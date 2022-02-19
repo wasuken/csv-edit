@@ -11,7 +11,7 @@ function CSVInput() {
   const inputRef = useRef();
   const handleClearBtn = () => {
     setcsv([]);
-    document.querySelector('#csv-file')?.value = [];
+    document.querySelector('#csv-file').value = [];
   };
   const handleUploadCSV = () => {
     const input = inputRef?.current;
