@@ -9,7 +9,7 @@ function CSVList(props) {
   if (csv.length <= 0) return <p>empty.</p>;
   return (
     <div className="" style={{width: "3000px"}}>
-      <table className="table align-middle" style={{maxWidth: "100%"}}>
+      <table className="table table-dark align-middle table-hover" style={{maxWidth: "100%"}}>
         <thead>
           <tr>
             {csv[0].map((h, i) => (

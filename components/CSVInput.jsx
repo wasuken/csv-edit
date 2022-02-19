@@ -37,25 +37,26 @@ function CSVInput() {
   };
   return (
     <div>
-      <div className="mb-4">
         <input
           id="csv-file"
           ref={inputRef}
           disabled={uploading}
           type="file"
-          className="form-control"
+          className="form-control w-50 m-2"
         />
-      </div>
-      <button
-        onClick={handleUploadCSV}
-        disabled={uploading}
-        className="btn btn-primary m-2"
-      >
-        {uploading ? "Uploading..." : "Open"}
-      </button>
-      <button onClick={() => handleClearBtn()} className="btn btn-primary m-2">
-        clear
-      </button>
+        <button
+          onClick={handleUploadCSV}
+          disabled={uploading}
+          className="btn btn-primary m-2"
+        >
+          {uploading ? "Uploading..." : "Open"}
+        </button>
+        <button
+          onClick={() => handleClearBtn()}
+          className="btn btn-primary m-2"
+        >
+          Clear
+        </button>
     </div>
   );
 }

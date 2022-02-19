@@ -1,5 +1,7 @@
 .container {
   padding: 0 2rem;
+  background-color: #302f2a;
+  color: white;
 }
 
 .main {

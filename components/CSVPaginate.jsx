@@ -7,20 +7,20 @@ function CSVPaginate() {
   const total = Math.ceil(csv.length / 100);
   return (
     <nav aria-label="Page navigation">
-      <div>
+      <div className="m-2">
         rows: {csv.length}
       </div>
-      <h4>
+      <h4 className="m-2">
         {page+1}/{total}
       </h4>
       <div>
-        <select value={page} onChange={(e) => setPage(parseInt(e.target.value))}>
+        <select className="form-select w-25 m-2" value={page} onChange={(e) => setPage(parseInt(e.target.value))}>
           {[...Array(total)].map((_, i) => (
             <option key={i} value={i}>{i+1}</option>
           ))}
         </select>
       </div>
-      <ul className="pagination">
+      <ul className="pagination m-2">
         <li className="page-item">
           <button disabled={page <= 0} className="page-link" onClick={() => setPage(0)}>First</button>
         </li>
