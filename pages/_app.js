@@ -1,7 +1,11 @@
-import '../styles/globals.css'
+import "../styles/globals.css";
+import React from "react";
+import { CSVProvider } from '../context/csv';
 
-function MyApp({ Component, pageProps }) {
-  return <Component {...pageProps} />
+export default function MyApp({ Component, pageProps }) {
+  return (
+    <CSVProvider>
+      <Component {...pageProps} />
+    </CSVProvider>
+  );
 }
-
-export default MyApp
