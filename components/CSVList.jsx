@@ -85,12 +85,12 @@ function CSVList() {
 					(modalIsOpen >= 0)?
 						(<div>
 							 {editRow.map((v, i) => (
-								 <div class="row g-3 align-items-center" >
-									 <div class="col-auto">
-										 <label for={`edit-input-${i}`} class="col-form-label">{csv[0][i]}</label>
+								 <div className="row g-3 align-items-center" key={i}>
+									 <div className="col-auto">
+										 <label htmlFor={`edit-input-${i}`} className="col-form-label">{csv[0][i]}</label>
 									 </div>
-									 <div class="col-auto">
-										 <input type="text" for={`edit-input-${i}`} className="form-control editing" num={i} key={i} value={v} onChange={(e) => handleEditRowItem(e.target.value, i)}/>
+									 <div className="col-auto">
+										 <input type="text" htmlFor={`edit-input-${i}`} className="form-control editing" num={i} key={i} value={v} onChange={(e) => handleEditRowItem(e.target.value, i)}/>
 									 </div>
 								 </div>
 							 ))}
@@ -98,7 +98,7 @@ function CSVList() {
 						:
 						""
 				}
-				<div class="d-flex justify-content-between mt-3">
+				<div className="d-flex justify-content-between mt-3">
 					<button className="btn btn-primary me-1" onClick={() => handleModalSubmit()}>Submit</button>
 					<button className="btn btn-secondary ml-1" onClick={closeModal}>Cancel</button>
 				</div>
