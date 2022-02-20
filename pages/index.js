@@ -7,11 +7,12 @@ import CSVList from '../components/CSVList';
 import CSVPaginate from '../components/CSVPaginate';
 
 export default function Home() {
-  return (
-    <div className={styles.container}>
-      <CSVInput />
-      <CSVPaginate />
-      <CSVList />
-    </div>
-  )
+	return (
+		<div className={styles.container}>
+			<CSVInput />
+			<CSVPaginate />
+			<CSVList />
+			<div id="edit-modal"></div>
+		</div>
+	)
 }
