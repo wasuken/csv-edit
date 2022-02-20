@@ -1,6 +1,7 @@
 import { useQuery } from "react-query";
 import { useCSVContext } from "../context/csv";
 import React, { useState, useRef } from "react";
+import { CSVLink, CSVDownload } from "react-csv";
 import Papa from "papaparse";
 import "bootstrap/dist/css/bootstrap.min.css";
 import Encoding from "encoding-japanese";
@@ -37,26 +38,27 @@ function CSVInput() {
   };
   return (
     <div>
-        <input
-          id="csv-file"
-          ref={inputRef}
-          disabled={uploading}
-          type="file"
-          className="form-control w-50 m-2"
-        />
-        <button
-          onClick={handleUploadCSV}
-          disabled={uploading}
-          className="btn btn-primary m-2"
-        >
-          {uploading ? "Uploading..." : "Open"}
-        </button>
-        <button
-          onClick={() => handleClearBtn()}
-          className="btn btn-primary m-2"
-        >
-          Clear
-        </button>
+      <input
+	  id="csv-file"
+	  ref={inputRef}
+	  disabled={uploading}
+	  type="file"
+	  className="form-control w-50 m-2"
+      />
+	  <CSVLink data={csv} className="btn btn-primary">Export</CSVLink>
+      <button
+		onClick={handleUploadCSV}
+		disabled={uploading}
+		className="btn btn-primary m-2"
+      >
+		{uploading ? "Uploading..." : "Open"}
+      </button>
+      <button
+		onClick={() => handleClearBtn()}
+		className="btn btn-primary m-2"
+      >
+		Clear
+      </button>
     </div>
   );
 }
