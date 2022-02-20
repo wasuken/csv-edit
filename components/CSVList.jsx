@@ -27,7 +27,8 @@ function CSVList() {
     setIsOpen(i);
     setEditRow([...csv[i]]);
   }
-  function handleEditRowItem(v, i) {
+  function handleEditRowItem(i, e) {
+	const v = e.target.value;
     let newrow = [...editRow];
     newrow[i] = v;
     setEditRow([...newrow]);
@@ -93,7 +94,7 @@ function CSVList() {
         <h2>Edit</h2>
         {modalIsOpen >= 0 ? (
           <div>
-            {editRow.map((v, i) => (
+            {csv[0].map((v, i) => (
               <div className="row g-3 align-items-center" key={i}>
                 <div className="col-auto">
                   <label htmlFor={`edit-input-${i}`} className="col-form-label">
@@ -107,8 +108,8 @@ function CSVList() {
                     className="form-control editing"
                     num={i}
                     key={i}
-                    value={v}
-                    onChange={(e) => handleEditRowItem(e.target.value, i)}
+                    defaultValue={v}
+                    onChange={(e) => handleEditRowItem(i, e)}
                   />
                 </div>
               </div>
