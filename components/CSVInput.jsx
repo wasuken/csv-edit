@@ -140,7 +140,6 @@ function CSVInput() {
                 <div className="col-auto">
                   <input
                     type="text"
-                    htmlFor={`input-${i}`}
                     className="form-control"
                     num={i}
                     key={i}
