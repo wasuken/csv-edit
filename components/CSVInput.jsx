@@ -1,5 +1,5 @@
 import { useQuery } from "react-query";
-import { useCSVContext } from "../context/csv";
+import { useCSVContext, initCsv } from "../context/csv";
 import React, { useState, useRef } from "react";
 import { CSVLink, CSVDownload } from "react-csv";
 import Papa from "papaparse";
@@ -27,7 +27,7 @@ function CSVInput() {
   const [uploading, setUploading] = useState(false);
   const [insPage, setInsPage] = useState(1);
   const inputRef = useRef();
-  const total = Math.ceil(csv.length / 100);
+  const total = Math.ceil(csv.data.length / 100);
   const [header, setHeader] = useState({});
   function handleChangeInputVal(h, e) {
     e.preventDefault();
@@ -36,10 +36,10 @@ function CSVInput() {
     setHeader(hdv);
   }
   function openModal() {
-    if (csv.length > 0) {
+    if (csv.data.length > 0) {
       setIsOpen(true);
       let hd = {};
-      csv[0].forEach((x) => (hd[x] = ""));
+      csv.data[0].forEach((x) => (hd[x] = ""));
       setHeader(hd);
     }
   }
@@ -47,12 +47,12 @@ function CSVInput() {
     setIsOpen(false);
   }
   const handleClearBtn = () => {
-    setcsv([]);
+    setcsv({ ...initCsv, data: [] });
     document.querySelector("#csv-file").value = [];
   };
   const handleModalSubmit = () => {
-    let csvv = [...csv];
-    csvv.splice(insPage, 0, Object.values(header));
+    let csvv = { ...csv };
+    csvv.data.splice(insPage, 0, Object.values(header));
     setcsv(csvv);
     closeModal();
   };
@@ -73,37 +73,48 @@ function CSVInput() {
         encoding: detected,
       });
 
-      setcsv(data);
+      setcsv({ ...csv, data: data });
       setUploading(false);
     };
     reader.readAsText(file);
   };
   return (
-    <div>
+    <div className="mb-2">
       <input
         id="csv-file"
         ref={inputRef}
         disabled={uploading}
         type="file"
-        className="form-control w-50 m-2"
+        className="form-control"
       />
-      <CSVLink data={csv} className="btn btn-primary">
-        Export
-      </CSVLink>
-      <button
-        onClick={handleUploadCSV}
-        disabled={uploading}
-        className="btn btn-primary m-2"
-      >
-        {uploading ? "Uploading..." : "Open"}
-      </button>
-      <button onClick={() => handleClearBtn()} className="btn btn-primary m-2">
-        Clear
-      </button>
-      <div className="m-2">
-        <button onClick={() => openModal()} className="btn btn-primary m-2">
-          Insert Row
+      <div className="d-flex justify-content-start">
+        {csv.data.length > 0 ? (
+          <CSVLink data={[]} className="btn btn-primary m-2">
+            Export
+          </CSVLink>
+        ) : (
+          ""
+        )}
+        <button
+          onClick={handleUploadCSV}
+          disabled={uploading}
+          className="btn btn-primary  m-2"
+        >
+          {uploading ? "Uploading..." : "Open"}
         </button>
+        <button
+          onClick={() => handleClearBtn()}
+          className="btn btn-primary m-2"
+        >
+          Clear
+        </button>
+        {csv.data.length > 0 ? (
+          <button onClick={() => openModal()} className="btn btn-primary m-2">
+            Insert Row
+          </button>
+        ) : (
+          ""
+        )}
       </div>
       <Modal
         isOpen={modalIsOpen}
