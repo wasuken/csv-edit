@@ -67,7 +67,8 @@ function CSVInput() {
     setUploading(true);
 
     reader.onloadend = ({ target }) => {
-      const detected = Encoding.detect(target.result);
+      let detected = Encoding.detect(target.result);
+	  if(detected === 'UNICODE') detected = 'Shift-JIS';
       const { data, errors, meta } = Papa.parse(target.result, {
         header: false,
         encoding: detected,
