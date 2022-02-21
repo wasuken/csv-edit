@@ -34,15 +34,17 @@ function CSVList() {
   const { csv, setcsv, page } = useCSVContext();
 
   useEffect(() => {
-    if (csv.length > 0) {
-      let csvv = [...csv.slice(1)];
+    if (csv.data.length > 0) {
+      let csvv = { ...csv };
+      let header = [...csvv.data[0]];
+      let data = [...csvv.data.slice(1)];
       let ii = -1;
-      csv[0].forEach((v, i) => {
+      header.forEach((v, i) => {
         if (v === sortInfo.key) {
           ii = i;
         }
       });
-      csvv.sort((a, b) => {
+      data.sort((a, b) => {
         if (a[ii] > b[ii]) {
           return sortInfo.order ? -1 : 1;
         } else if (a[ii] < b[ii]) {
@@ -51,7 +53,10 @@ function CSVList() {
           return 0;
         }
       });
-      setcsv([csv[0], ...csvv]);
+      data = [header, ...data];
+      csvv.data = data;
+
+      setcsv({ ...csvv });
     }
   }, [sortInfo]);
 
@@ -77,7 +82,7 @@ function CSVList() {
 
   function openModal(i) {
     setIsOpen(i);
-    setEditRow([...csv[i]]);
+    setEditRow([...csv.data[i]]);
   }
   function handleEditRowItem(i, e) {
     const v = e.target.value;
@@ -92,38 +97,32 @@ function CSVList() {
   function handleModalSubmit() {
     // 更新処理
     const editingInputs = document.querySelectorAll(".editing");
-    let newcsv = [...csv];
+    let newcsv = { ...csv };
     let ary = [];
     editingInputs.forEach((x) => {
       const i = parseInt(x.getAttribute("num"));
       ary[i] = x.value;
     });
-    newcsv[modalIsOpen] = ary;
+    newcsv.data[modalIsOpen] = ary;
     setcsv(newcsv);
     closeModal();
   }
   function handleDelete() {
-    let newcsv = [...csv];
-    newcsv.splice(modalIsOpen, 1);
+    let newcsv = { ...csv };
+    newcsv.data.splice(modalIsOpen, 1);
     setcsv(newcsv);
     closeModal();
   }
-  if (csv.length <= 0) return <p>empty.</p>;
+  if (csv.data.length <= 0) return <p>empty.</p>;
   return (
     <div className="" style={{ width: "3000px" }}>
-      <button
-        className="btn btn-primary"
-        onClick={() => setSortInfo(initSortInfoState)}
-      >
-        SortClear
-      </button>
       <table
         className="table table-dark align-middle table-hover"
         style={{ maxWidth: "100%" }}
       >
         <thead>
           <tr>
-            {csv[0].map((h, i) => (
+            {(csv.data[0] ?? []).map((h, i) => (
               <th
                 scope="col w-25 ptr"
                 key={i}
@@ -142,7 +141,7 @@ function CSVList() {
           </tr>
         </thead>
         <tbody>
-          {csv.slice(page * 100 + 1, page * 100 + 101).map((row, i) => (
+          {csv.data.slice(page * 100 + 1, page * 100 + 101).map((row, i) => (
             <tr key={i} onDoubleClick={(e) => openModal(page * 100 + i + 1)}>
               {row.map((v, j) => (
                 <td className="text-break" key={j}>
@@ -162,11 +161,11 @@ function CSVList() {
         <h2>Edit</h2>
         {modalIsOpen >= 0 ? (
           <div>
-            {csv[0].map((v, i) => (
+            {csv.data[modalIsOpen].map((v, i) => (
               <div className="row g-3 align-items-center" key={i}>
                 <div className="col-auto">
                   <label htmlFor={`edit-input-${i}`} className="col-form-label">
-                    {csv[0][i]}
+                    {csv.data[0][i]}
                   </label>
                 </div>
                 <div className="col-auto">

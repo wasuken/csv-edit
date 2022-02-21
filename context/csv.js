@@ -6,8 +6,13 @@ export function useCSVContext() {
   return useContext(CSVContext);
 }
 
+export const initCsv = {
+  data: [],
+  f: (v) => v,
+};
+
 export function CSVProvider({ children }) {
-  const [csv, setcsv] = useState([]);
+  const [csv, setcsv] = useState(initCsv);
   const [page, setPage] = useState(0);
 
   const value = {
