@@ -45,9 +45,15 @@ function CSVList() {
         }
       });
       data.sort((a, b) => {
-        if (a[ii] > b[ii]) {
+		let ai = parseInt(a[ii]);
+		let bi = parseInt(b[ii]);
+		if(!ai){
+		  ai = a[ii];
+		  bi = b[ii];
+		}
+        if (ai > bi) {
           return sortInfo.order ? -1 : 1;
-        } else if (a[ii] < b[ii]) {
+        } else if (ai < bi) {
           return sortInfo.order ? 1 : -1;
         } else {
           return 0;
@@ -115,10 +121,10 @@ function CSVList() {
   }
   if (csv.data.length <= 0) return <p>empty.</p>;
   return (
-    <div className="" style={{ width: "3000px" }}>
+    <div className="" style={{whiteSpace: "nowrap"}}>
       <table
         className="table table-dark align-middle table-hover"
-        style={{ maxWidth: "100%" }}
+
       >
         <thead>
           <tr>
@@ -131,10 +137,10 @@ function CSVList() {
                 <div className={styles.ptr}>
                   {h}
                   {sortInfo.isSort && sortInfo.key === h
-                    ? sortInfo.order
-                      ? "↑"
-                      : "↓"
-                    : ""}
+                  ? sortInfo.order
+                  ? "↑"
+                  : "↓"
+                  : ""}
                 </div>
               </th>
             ))}
