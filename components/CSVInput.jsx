@@ -23,7 +23,7 @@ Modal.setAppElement("#edit-modal");
 
 function CSVInput() {
   const [modalIsOpen, setIsOpen] = useState(false);
-  const { csv, setcsv } = useCSVContext();
+  const { csv, setcsv, rollbackHistCsv } = useCSVContext();
   const [uploading, setUploading] = useState(false);
   const [insPage, setInsPage] = useState(1);
   const inputRef = useRef();
@@ -73,8 +73,10 @@ function CSVInput() {
         header: false,
         encoding: detected,
       });
+	  const headerLength = data[0].length;
+	  const fd = data.filter((row) => row.length === headerLength);
 
-      setcsv({ ...csv, data: data });
+      setcsv({ ...csv, data: fd });
       setUploading(false);
     };
     reader.readAsText(file);
@@ -112,6 +114,13 @@ function CSVInput() {
         {csv.data.length > 0 ? (
           <button onClick={() => openModal()} className="btn btn-primary m-2">
             Insert Row
+          </button>
+        ) : (
+          ""
+        )}
+		{csv.data.length > 0 ? (
+          <button onClick={rollbackHistCsv} className="btn btn-primary m-2">
+            rollback
           </button>
         ) : (
           ""
