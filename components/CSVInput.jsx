@@ -73,8 +73,10 @@ function CSVInput() {
         header: false,
         encoding: detected,
       });
+	  const headerLength = data[0].length;
+	  const fd = data.filter((row) => row.length === headerLength);
 
-      setcsv({ ...csv, data: data });
+      setcsv({ ...csv, data: fd });
       setUploading(false);
     };
     reader.readAsText(file);
