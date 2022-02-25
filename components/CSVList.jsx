@@ -1,5 +1,5 @@
 import { useQuery } from "react-query";
-import { useCSVContext } from "../context/csv";
+import { useCSVContext, initSortInfoState } from "../context/csv";
 import React, { useState, useRef, useEffect } from "react";
 import Papa from "papaparse";
 import Modal from "react-modal";
@@ -21,53 +21,22 @@ const customStyles = {
 
 Modal.setAppElement("#edit-modal");
 
-const initSortInfoState = {
-  key: "",
-  isSort: false,
-  order: true,
-};
-
 function CSVList() {
   const [modalIsOpen, setIsOpen] = useState(-1);
   const [editRow, setEditRow] = useState([]);
-  const [sortInfo, setSortInfo] = useState(initSortInfoState);
-  const { csv, setcsv, page } = useCSVContext();
-
-  useEffect(() => {
-    if (csv.data.length > 0) {
-      let csvv = { ...csv };
-      let header = [...csvv.data[0]];
-      let data = [...csvv.data.slice(1)];
-      let ii = -1;
-      header.forEach((v, i) => {
-        if (v === sortInfo.key) {
-          ii = i;
-        }
-      });
-      data.sort((a, b) => {
-		let ai = parseInt(a[ii]);
-		let bi = parseInt(b[ii]);
-		if(!ai){
-		  ai = a[ii];
-		  bi = b[ii];
-		}
-        if (ai > bi) {
-          return sortInfo.order ? -1 : 1;
-        } else if (ai < bi) {
-          return sortInfo.order ? 1 : -1;
-        } else {
-          return 0;
-        }
-      });
-      data = [header, ...data];
-      csvv.data = data;
-
-      setcsv({ ...csvv });
-    }
-  }, [sortInfo]);
+  const { csv, setcsv, page, setSort, history } = useCSVContext();
+  let sortInfo = { ...initSortInfoState };
+  const hi = history.slice(-1)[0];
+  if (hi && hi.sort) {
+    sortInfo = { ...hi.sort };
+  }
 
   function updateSortInfo(k) {
-    let info = { ...sortInfo };
+    let info = { ...initSortInfoState };
+    const hi = history.slice(-1)[0];
+    if (hi && hi.sort) {
+      info = { ...hi.sort };
+    }
     if (info.isSort) {
       // すでにソート済の処理
       if (info.key === k) {
@@ -82,8 +51,7 @@ function CSVList() {
       info.isSort = true;
       info.key = k;
     }
-
-    setSortInfo(info);
+    setSort(info);
   }
 
   function openModal(i) {
@@ -121,11 +89,8 @@ function CSVList() {
   }
   if (csv.data.length <= 0) return <p>empty.</p>;
   return (
-    <div className="" style={{whiteSpace: "nowrap"}}>
-      <table
-        className="table table-dark align-middle table-hover"
-
-      >
+    <div className="" style={{ whiteSpace: "nowrap" }}>
+      <table className="table table-dark align-middle table-hover">
         <thead>
           <tr>
             {(csv.data[0] ?? []).map((h, i) => (
@@ -137,10 +102,10 @@ function CSVList() {
                 <div className={styles.ptr}>
                   {h}
                   {sortInfo.isSort && sortInfo.key === h
-                  ? sortInfo.order
-                  ? "↑"
-                  : "↓"
-                  : ""}
+                    ? sortInfo.order
+                      ? "↑"
+                      : "↓"
+                    : ""}
                 </div>
               </th>
             ))}
