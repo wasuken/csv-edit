@@ -4,7 +4,6 @@ import React, { useState, useRef } from "react";
 import { CSVLink, CSVDownload } from "react-csv";
 import Papa from "papaparse";
 import Modal from "react-modal";
-import "bootstrap/dist/css/bootstrap.min.css";
 import Encoding from "encoding-japanese";
 
 const customStyles = {
@@ -19,16 +18,15 @@ const customStyles = {
   },
 };
 
-Modal.setAppElement("#edit-modal");
-
 function CSVInput() {
   const [modalIsOpen, setIsOpen] = useState(false);
   const { csv, setcsv, rollbackHistCsv } = useCSVContext();
   const [uploading, setUploading] = useState(false);
-  const [insPage, setInsPage] = useState(1);
+  const [insRowIndex, setInsRowIndex] = useState(0);
   const inputRef = useRef();
   const total = Math.ceil(csv.data.length / 100);
   const [header, setHeader] = useState({});
+
   function handleChangeInputVal(h, e) {
     e.preventDefault();
     let hdv = { ...header };
@@ -52,7 +50,7 @@ function CSVInput() {
   };
   const handleModalSubmit = () => {
     let csvv = { ...csv };
-    csvv.data.splice(insPage, 0, Object.values(header));
+    csvv.data.splice(insRowIndex+1, 0, Object.values(header));
     setcsv(csvv);
     closeModal();
   };
@@ -68,13 +66,13 @@ function CSVInput() {
 
     reader.onloadend = ({ target }) => {
       let detected = Encoding.detect(target.result);
-	  if(detected === 'UNICODE') detected = 'Shift-JIS';
+      if (detected === "UNICODE") detected = "Shift-JIS";
       const { data, errors, meta } = Papa.parse(target.result, {
         header: false,
         encoding: detected,
       });
-	  const headerLength = data[0].length;
-	  const fd = data.filter((row) => row.length === headerLength);
+      const headerLength = data[0].length;
+      const fd = data.filter((row) => row.length === headerLength);
 
       setcsv({ ...csv, data: fd });
       setUploading(false);
@@ -118,7 +116,7 @@ function CSVInput() {
         ) : (
           ""
         )}
-		{csv.data.length > 0 ? (
+        {csv.data.length > 0 ? (
           <button onClick={rollbackHistCsv} className="btn btn-primary m-2">
             rollback
           </button>
@@ -142,8 +140,13 @@ function CSVInput() {
                 </label>
               </div>
               <div className="col-auto">
-                <select id="input-page" className="form-select w-25 m-2">
-                  {[...Array(total)].map((_, i) => (
+                <select
+                  id="input-page"
+                  className="form-select m-2"
+                  onChange={(e) => setInsRowIndex(parseInt(e.target.value))}
+                  value={insRowIndex}
+                >
+                  {[...Array(csv.data.length)].map((_, i) => (
                     <option key={i} value={i}>
                       {i + 1}
                     </option>

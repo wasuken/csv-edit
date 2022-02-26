@@ -3,7 +3,6 @@ import { useCSVContext, initSortInfoState } from "../context/csv";
 import React, { useState, useRef, useEffect } from "react";
 import Papa from "papaparse";
 import Modal from "react-modal";
-import "bootstrap/dist/css/bootstrap.min.css";
 
 import styles from "../styles/CSVList.module.css";
 

@@ -2,7 +2,6 @@ import { useQuery } from "react-query";
 import { useCSVContext } from "../context/csv";
 import React, { useState, useRef } from "react";
 import { CSVLink, CSVDownload } from "react-csv";
-import "bootstrap/dist/css/bootstrap.min.css";
 
 function CSVSearch() {
   const { csv, setcsv } = useCSVContext();

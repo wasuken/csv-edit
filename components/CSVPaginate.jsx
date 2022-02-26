@@ -1,6 +1,5 @@
 import { useQuery } from "react-query";
 import { useCSVContext } from "../context/csv";
-import "bootstrap/dist/css/bootstrap.min.css";
 
 function CSVPaginate() {
   const { csv, page, setPage } = useCSVContext();
